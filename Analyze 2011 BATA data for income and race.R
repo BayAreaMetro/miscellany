@@ -35,8 +35,13 @@ final_income <- final %>%
   summarize(total=n()) %>% 
   spread(income_rc,total)
 
-# Summarize race/ethnicity
-final_race <- final %>% mutate(
+# Recode race/ethnicity variables to zeros and ones and summarize data by race
+
+final_race <- final %>% 
+  mutate_at(vars(`Question 27: Caucasian/White`:`Question 27: Native Hawaiian/Other Pacific Islander`),
+            ~ case_when(
+              is.na(.) ~0,
+              .=="X"   ~1)) %>% mutate(
   sum_ethnicities=`Question 27: African-American/Black`+`Question 27: American Indian/Alaska Native`+        # Hispanic not included, addressed separately
     `Question 27: Asian`+`Question 27: Caucasian/White`+`Question 27: Native Hawaiian/Other Pacific Islander`,
   race_general=case_when(
@@ -60,5 +65,4 @@ final_race <- final %>% mutate(
 
 write.csv(final_income, paste0(output, "2011 BATA Survey Bay Bridge Income.csv"), row.names = FALSE, quote = T)
 write.csv(final_race, paste0(output, "2011 BATA Survey Bay Bridge Race.csv"), row.names = FALSE, quote = T)
-
                            

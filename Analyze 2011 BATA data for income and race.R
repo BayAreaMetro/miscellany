@@ -6,7 +6,7 @@
 suppressMessages(library(tidyverse))
 library(readxl)
 
-output <- "M:/Data/Requests/Lisa Zorn/TPS Bay Bridge Income and Race/"
+output <- "M:/Data/BATA/2011 Bay Bridge Survey/"
 
 # Bring in data
 
@@ -33,7 +33,8 @@ final_income <- final %>%
   ) %>% 
   group_by(income_rc) %>% 
   summarize(total=n()) %>% 
-  spread(income_rc,total)
+  #spread(income_rc,total) %>% 
+  filter(income_rc != "7_missing")
 
 # Recode race/ethnicity variables to zeros and ones and summarize data by race
 
@@ -60,7 +61,8 @@ final_race <- final %>%
     TRUE                                                                               ~ "6_missing")) %>% 
   group_by(race_general) %>% 
   summarize(total=n()) %>% 
-  spread(race_general,total)
+  #spread(race_general,total) %>% 
+  filter(race_general != "6_missing")
 
 
 write.csv(final_income, paste0(output, "2011 BATA Survey Bay Bridge Income.csv"), row.names = FALSE, quote = T)

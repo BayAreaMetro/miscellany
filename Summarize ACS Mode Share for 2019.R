@@ -30,7 +30,7 @@ acs_mode <- get_acs(geography = "county", variables = ACS_table,
                       state = state_code, county=baycounties,
                       year=ACS_year,
                       output="wide",
-                      survey = "acs5",
+                      survey = "acs1",
                       key = censuskey) %>% 
   mutate(County=str_replace(NAME," County, California","")) %>%
   select(County, 

@@ -124,7 +124,7 @@ PUMS_2021 = "M:/Data/Census/PUMS/PUMS 2021/pbayarea21.Rdata"
 load (PUMS_2019)
 load (PUMS_2021)
 
-# Recode na values for mode (allowing for a commuter-only file), and identify workers who live and work in Bay Area
+# Subset transit commuters for 2019 and 2021 PUMS files
 
 transit_2019 <- pbayarea19 %>%
   filter(JWTRNS %in% 2:6) 
@@ -132,7 +132,7 @@ transit_2019 <- pbayarea19 %>%
 transit_2021 <- pbayarea21 %>%
   filter(JWTRNS %in% 2:6) 
 
-# Median age
+# Median age for Bay Area from PUMS
 
 median_age_2019 <- weighted.median(transit_2019$AGEP,transit_2019$PWGTP)
 median_age_2021 <- weighted.median(transit_2021$AGEP,transit_2021$PWGTP)
@@ -168,7 +168,7 @@ county_2021 <- transit_2021 %>%
   )) %>% 
   select(PUMA,County_Name, PWGTP,JWTRNS,POWPUMA,POWSP,POWNAME)
 
-# Summarize transit and total commuters and calculate share of transit commuters, output data
+# Summarize county-to-county transit commuting, output data
 
 summary_2019 <- county_2019 %>%
   group_by(County_Name,POWNAME) %>%

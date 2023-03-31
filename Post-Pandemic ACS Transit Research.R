@@ -184,6 +184,3 @@ summary_2021 <- county_2021 %>%
 
 write.csv(summary_2019, file.path(BOX_PPR,"PUMS2019 Transit Commuters by County of Home and Work.csv"), row.names = FALSE)
 write.csv(summary_2021, file.path(BOX_PPR,"PUMS2021 Transit Commuters by County of Home and Work.csv"), row.names = FALSE)
-
-trial <- pbayarea21 %>% 
-  filter(County_Name=="San Francisco" & POWPUMA==5500 & JWTRNS %in% 2:6)

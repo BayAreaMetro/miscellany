@@ -15,7 +15,9 @@ USERPROFILE          <- gsub("\\\\","/", Sys.getenv("USERPROFILE"))
 BOX_PPR              <- file.path(USERPROFILE, "Box", "Modeling and Surveys","Census","Post Pandemic Research")
 
 
-acs_variables <- c(total_pop_              ="B01003_001",          # Total area population
+acs_variables <- c(
+# Transit variables  
+                   total_pop_              ="B01003_001",          # Total area population
                    total_transit_          ="C08301_008",          # Total transit users
                    total_commuters_        ="C08301_001",          # Total commuters
                    total_wfh_              ="C08301_011",          # Total work from home (for calculating out of home modes)
@@ -37,7 +39,25 @@ acs_variables <- c(total_pop_              ="B01003_001",          # Total area 
                    transit_rent_           ="B08137_012",          # Transit user rent home
                    transit_0_veh_          ="C08141_017",          # Transit user zero vehicle households
                    transit_med_age_        ="B08103_004",          # Median age for transit users
-                   transit_LEP_            ="C08113_020"           # Transit users speak English less than very well
+                   transit_LEP_            ="C08113_020",          # Transit users speak English less than very well
+# Total variables
+
+                   total_wnh_              ="C03002_003",          # White, not Hispanic persons
+                   total_female_           ="B01001_026",          # Female persons
+                   total_notcitizen_       ="B05001_006",          # Not a citizen persons
+                   commuter_earnings_50_65_="C08119_007",          # Total commuters with earnings 50-65
+                   commuter_earnings_65_75_="C08119_008",          # Total commuters with earnings 65-75
+                   commuter_earnings_75p_  ="C08119_009",          # Total commuters with earnings 75+ 
+                   commuter_wah_occ_       ="C08124_002",          # Total commuter work at home occs - mgmt.,bus.,science,arts
+                   commuter_hh_            ="B08137_001",          # Commuters in households differs from full universe
+                   commuter_rent_          ="B08137_003",          # Commuters rent home
+                   total_hh_               ="B25008_001",          # Persons in households differs from full universe
+                   total_rent_             ="B25008_003",          # Persons rent home
+                   commuter_0_veh_         ="C08141_002",          # Commuter zero vehicle households
+                   commuter_med_age_       ="B08103_001",          # Median age for commuters
+                   commuter_LEP_           ="C08113_005",          # Commuters speak English less than very well
+                   total_language_         ="C06007_001",          # Total population 5 years and over
+                   total_LEP_              ="C06007_005"           # Total LEP population 5 years and over
 )
   
 # 2019 data
@@ -108,7 +128,10 @@ final <- left_join(combined_19,combined_21,by=c("GEOID","NAME")) %>%
   select(sort(names(.))) %>% 
   relocate(c("GEOID","NAME"),.before = commute_tot_earnings_2019) %>% 
   mutate(transit_earnings_50p_2019=transit_earnings_50_65_2019+transit_earnings_65_75_2019+transit_earnings_75p_2019,
-         transit_earnings_50p_2021=transit_earnings_50_65_2021+transit_earnings_65_75_2021+transit_earnings_75p_2021)
+         transit_earnings_50p_2021=transit_earnings_50_65_2021+transit_earnings_65_75_2021+transit_earnings_75p_2021,
+         commuter_earnings_50p_2019=commuter_earnings_50_65_2019+commuter_earnings_65_75_2019+commuter_earnings_75p_2019,
+         commuter_earnings_50p_2021=commuter_earnings_50_65_2021+commuter_earnings_65_75_2021+commuter_earnings_75p_2021
+      )
 
 write.csv(final,file.path(BOX_PPR,"ACS 2019 and 2021 Means of Transportation to Work by Variables.csv"),row.names = F)
 
@@ -132,12 +155,22 @@ transit_2019 <- pbayarea19 %>%
 transit_2021 <- pbayarea21 %>%
   filter(JWTRNS %in% 2:6) 
 
+commuter_2019 <- pbayarea19 %>%
+  filter(JWTRNS %in% 1:12) 
+
+commuter_2021 <- pbayarea21 %>%
+  filter(JWTRNS %in% 1:12) 
+
 # Median age for Bay Area from PUMS
 
-median_age_2019 <- weighted.median(transit_2019$AGEP,transit_2019$PWGTP)
-median_age_2021 <- weighted.median(transit_2021$AGEP,transit_2021$PWGTP)
-print (median_age_2019)
-print (median_age_2021)
+transit_age_2019 <- weighted.median(transit_2019$AGEP,transit_2019$PWGTP)
+transit_age_2021 <- weighted.median(transit_2021$AGEP,transit_2021$PWGTP)
+commuter_age_2019 <- weighted.median(commuter_2019$AGEP,commuter_2019$PWGTP)
+commuter_age_2021 <- weighted.median(commuter_2021$AGEP,commuter_2021$PWGTP)
+print (transit_age_2019)
+print (transit_age_2021)
+print (commuter_age_2019)
+print (commuter_age_2021)
 
 # Analyze 2019 and 2021 Bay Area PUMS data for intra-regional Bay Area workers
 county_2019 <- transit_2019 %>% 

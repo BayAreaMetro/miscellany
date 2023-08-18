@@ -1,5 +1,7 @@
 # ACS 2021 PUMS workers from all states.r
-# Extract all workers from all pums and assign bay residence and worker boolean fields
+# Extract all "commuters" from all pums and assign bay residence and worker boolean fields
+# "Commuters" includes civilian employed and armed forces at work and excludes: civilian and armed forces
+# with a job but not at work; unemployed; out of the labor force
 
 library(tidycensus)
 library(tidyverse)
@@ -24,7 +26,7 @@ allpums <- get_pums(
   survey = "acs1"
   )
 
-# Exclude non-workers, create Bay resident and worker variables
+# Exclude non-commuters, create Bay resident and worker variables
 
 bayworkers <- allpums %>% 
   filter(!(POWPUMA=="0000N")) %>% 

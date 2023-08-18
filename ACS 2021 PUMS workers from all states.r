@@ -24,7 +24,7 @@ allpums <- get_pums(
   survey = "acs1"
   )
 
-# Exclude non-workers
+# Exclude non-workers, create Bay resident and worker variables
 
 bayworkers <- allpums %>% 
   filter(!(POWPUMA=="0000N")) %>% 
@@ -32,6 +32,7 @@ bayworkers <- allpums %>%
          bay_puma_work=if_else((POWPUMA %in% baypowpuma & POWSP=="06"),"yes","no"))
 
 write.csv(bayworkers,file.path(output,"ACS 2021 PUMS Workers.csv"),row.names = F)
+
 
 
 

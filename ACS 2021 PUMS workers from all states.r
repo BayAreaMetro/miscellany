@@ -1,7 +1,7 @@
 # ACS 2021 PUMS workers from all states.r
 # Extract all "commuters" from all pums and assign bay residence and worker boolean fields
 # "Commuters" includes civilian employed and armed forces at work and excludes: civilian and armed forces
-# with a job but not at work; unemployed; out of the labor force
+# with a job but not at work; unemployed; out of the labor force; and/or under 16
 
 library(tidycensus)
 library(tidyverse)

@@ -19,6 +19,9 @@ baypuma    <- c("00101", "00102", "00103", "00104", "00105", "00106", "00107", "
 
 output <- "M:/Data/Census/PUMS/PUMS 2021/US PUMS"
 
+# Tidycensus PUMS call for all PUMS records in the US
+# Limited variables in the call (weighting variables are automatically added to the import)
+
 allpums <- get_pums(
   variables = c("PUMA","ST", "POWPUMA","POWSP"),
   state = "all",

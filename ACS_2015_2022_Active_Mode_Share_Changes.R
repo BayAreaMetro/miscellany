@@ -1,5 +1,5 @@
-# ACS 2015_2022 Active Mode Share Changes.R
-# Create "2020" TAZ data from ACS 2017-2021 
+# ACS_2015_2022_Active_Mode_Share_Changes.R
+# Get bike and walk mode shares for work trip from ACS
 # SI
 
 # Load libraries, disable scientific notation
@@ -21,7 +21,6 @@ ACS_2022 <- load_variables(year=2022, dataset="acs1", cache=TRUE)
 
 # Output location
 
-
 USERPROFILE          <- gsub("\\\\","/", Sys.getenv("USERPROFILE"))
 output               <- file.path(USERPROFILE,"Box","Modeling and Surveys","Census","processed")
 
@@ -37,7 +36,7 @@ ACS_variables <-  c(      drove_alone_                = "B08006_003",	# drove al
                           total_                      = "B08006_001"  # total
                           )
 
-# Function to make tract and block group data API calls by county for ACS 2017-2021
+# Function to call data by year, rename variables, remove margin of error columns
 
 ACS_2015_raw <- get_acs(
           geography = "county", variables = ACS_variables,
@@ -58,6 +57,8 @@ ACS_2022_raw <- get_acs(
   select(!(ends_with("_M"))) %>% 
   rename_with(~ gsub("_E$", "_2022", .), ends_with("_E")) %>% 
   mutate(NAME = str_replace(NAME, " County, California", ""))
+
+# Join 2015 and 2022 data, export
 
 joined <- left_join(ACS_2015_raw,ACS_2022_raw,by=c("GEOID","NAME")) %>% 
   select("NAME", "bike_2015", "bike_2022", "walk_2015", "walk_2022", "work_athome_2015",
